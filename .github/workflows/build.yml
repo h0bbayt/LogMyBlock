@@ -1,0 +1,59 @@
+name: Build Minecraft Mod
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [21]
+
+    steps:
+      # Paso 1: Verificar el repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Paso 2: Configurar la versión de Java (en este caso Java 21)
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'  # Usamos Eclipse Temurin (AdoptOpenJDK)
+          java-version: ${{ matrix.java-version }}
+
+      # Paso 3: Cambiar permisos del wrapper de Gradle
+      - name: Change Gradle wrapper permissions
+        run: chmod +x ./gradlew
+
+      # Paso 4: Cache de dependencias de Gradle
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Paso 5: Construcción del mod
+      - name: Build mod with Gradle
+        run: ./gradlew build
+
+      # Paso 6: Ejecutar las pruebas (si las hay)
+      - name: Run tests with Gradle
+        run: ./gradlew test
+
+      # Paso 7: Almacenar los artefactos resultantes (el mod compilado en formato JAR)
+      - name: Upload Mod Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: minecraft-mod-jar
+          path: build/libs/*.jar
