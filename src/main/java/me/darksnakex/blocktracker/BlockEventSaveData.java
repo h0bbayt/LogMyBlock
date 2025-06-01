@@ -10,14 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 
-import static com.mojang.text2speech.Narrator.LOGGER;
+import static me.darksnakex.blocktracker.Logmyblock.LOGGER;
 import static me.darksnakex.blocktracker.Events.BlockEventHandler.blockEventMap;
 import static me.darksnakex.blocktracker.Events.BlockEventHandler.blockEventTimes;
 
 public class BlockEventSaveData {
-
     private static final String DATA_FILE = "./config/logmyblockdata.json";  // Ruta al archivo de datos
-
 
 
     public static void saveBlockEvents() {

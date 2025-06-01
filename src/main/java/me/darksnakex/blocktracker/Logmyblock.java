@@ -16,15 +16,16 @@ import net.minecraftforge.fml.common.Mod;
 import static me.darksnakex.blocktracker.BlockEventSaveData.loadBlockEvents;
 import static me.darksnakex.blocktracker.BlockEventSaveData.saveBlockEvents;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 
 @Mod(Logmyblock.MODID)
 public class Logmyblock {
-
     public static String prefix = "§e[§3Log§aMy§6Block§e] §f";
     public static final String MODID = "logmyblock";
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public Logmyblock(){
         EVENT_BUS.register(new BlockEventHandler());
